@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "0.3",
+  "description": "Patch EC2 instances",
+  "mainSteps": [
+    {
+      "action": "aws:runCommand",
+      "name": "InstallUpdates",
+      "inputs": {
+        "DocumentName": "AWS-RunPatchBaseline",
+        "InstanceIds": ["{{ INSTANCE_IDS }}"]
+      }
+    }
+  ]
+}

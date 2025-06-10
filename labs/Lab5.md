@@ -1,18 +1,12 @@
-# 🧪 Lab 4: Proactive Alerting & Automated Remediation with CloudWatch and Systems Manager
+# Lab 5: Proactive Alerting & Automated Remediation with CloudWatch and Systems Manager
 
-### 🧭 Objective
+### Objective
 
 Create a system that monitors an EC2 instance for high CPU usage, triggers an alarm, and automatically remediates the issue by rebooting the instance using **AWS Systems Manager Automation**.
 
 ---
 
-### ⏱️ Duration
-
-\~90 minutes
-
----
-
-## ✅ What Students Will Learn
+## What Students Will Learn
 
 * Launch an EC2 instance with SSM access
 * Simulate high CPU usage on an EC2 instance
@@ -22,7 +16,7 @@ Create a system that monitors an EC2 instance for high CPU usage, triggers an al
 
 ---
 
-## 🔧 AWS Services Used
+## AWS Services Used
 
 * **EC2**
 * **CloudWatch (Metrics, Alarms)**
@@ -32,9 +26,9 @@ Create a system that monitors an EC2 instance for high CPU usage, triggers an al
 
 ---
 
-## 🔐 Step 0: Create IAM Roles
+## Step 0: Create IAM Roles
 
-### 🛡 0.1 Create an IAM Role for EC2 with SSM and CloudWatch Access
+### 0.1 Create an IAM Role for EC2 with SSM and CloudWatch Access
 
 1. Go to **IAM > Roles > Create role**
 2. **Service or use case**: Select `EC2`
@@ -48,9 +42,9 @@ Create a system that monitors an EC2 instance for high CPU usage, triggers an al
 
 ---
 
-## 💻 Step 1: Launch a Managed EC2 Instance
+## Step 1: Launch a Managed EC2 Instance
 
-### 🖥 1.1 Launch an EC2 Instance with SSM Access
+### 1.1 Launch an EC2 Instance with SSM Access
 
 1. Go to **EC2 > Instances > Launch instance**
 2. Name: `Lab1-SSM-EC2`
@@ -66,7 +60,7 @@ Create a system that monitors an EC2 instance for high CPU usage, triggers an al
 
 ---
 
-## ✅ Step 2: Verify Systems Manager Connectivity
+## Step 2: Verify Systems Manager Connectivity
 
 1. Go to **Systems Manager > Fleet Manager**
 2. Confirm your instance appears as **Managed**
@@ -80,9 +74,9 @@ If not, verify:
 
 ---
 
-## 🧪 Step 3: Simulate High CPU Usage
+## Step 3: Simulate High CPU Usage
 
-### ⚡ 3.1 Use SSM to Simulate CPU Stress
+### 3.1 Use SSM to Simulate CPU Stress
 
 1. Go to **Systems Manager > Run Command**
 2. Click **Run a command**
@@ -99,9 +93,9 @@ This command runs an infinite loop to stress the CPU.
 
 ---
 
-## 📈 Step 4: Monitor Metrics with CloudWatch
+## Step 4: Monitor Metrics with CloudWatch
 
-### 📊 4.1 View the CPU Metric
+### 4.1 View the CPU Metric
 
 1. Go to **CloudWatch > Metrics > EC2 > Per-Instance Metrics**
 2. Locate the `CPUUtilization` metric for your instance
@@ -109,9 +103,9 @@ This command runs an infinite loop to stress the CPU.
 
 ---
 
-## 🚨 Step 5: Create a CloudWatch Alarm
+## Step 5: Create a CloudWatch Alarm
 
-### 🔔 5.1 Alarm Setup
+### 5.1 Alarm Setup
 
 1. Go to **CloudWatch > Alarms > Create Alarm**
 2. Select Metric: `EC2 > Per-Instance Metrics > CPUUtilization`
@@ -128,9 +122,9 @@ This command runs an infinite loop to stress the CPU.
 
 ---
 
-## 🤖 Step 6: Create a Remediation Automation (SSM Runbook)
+## Step 6: Create a Remediation Automation (SSM Runbook)
 
-### 🛠 6.1 Create a Custom SSM Automation Runbook
+### 6.1 Create a Custom SSM Automation Runbook
 
 1. Go to **Systems Manager > Automation > Create Runbook**
 2. Type: `Automation`
@@ -161,7 +155,7 @@ mainSteps:
 
 ---
 
-### 🧾 6.2 Create an IAM Role for Automation
+### 6.2 Create an IAM Role for Automation
 
 1. Go to **IAM > Roles > Create Role**
 2. Service or use case: `Systems Manager`
@@ -173,9 +167,9 @@ mainSteps:
 
 ---
 
-## 📡 Step 7: Connect the Alarm to the Automation via EventBridge
+## Step 7: Connect the Alarm to the Automation via EventBridge
 
-### 🔁 7.1 Create an EventBridge Rule
+### 7.1 Create an EventBridge Rule
 
 1. Go to **EventBridge > Rules > Create Rule**
 
@@ -212,7 +206,7 @@ mainSteps:
 
 ---
 
-## 🔁 Step 8: Validate Everything
+## Step 8: Validate Everything
 
 1. Use **SSM RunCommand** to stress CPU again:
 
@@ -231,7 +225,7 @@ You should observe:
 
 ---
 
-## 🧹 Step 9: Cleanup
+## Step 9: Cleanup
 
 1. Terminate the EC2 instance
 2. Delete:
@@ -244,7 +238,7 @@ You should observe:
 
 ---
 
-## 💬 Reflection
+## Reflection
 
 * What are the pros/cons of rebooting vs scaling?
 * How could you escalate to PagerDuty or Slack instead of email?

@@ -1,18 +1,13 @@
-# 🧪 Lab 6: Distributed Tracing and Log Correlation with AWS X-Ray and CloudWatch Logs Insights
+# Lab 6: Distributed Tracing and Log Correlation with AWS X-Ray and CloudWatch Logs Insights
 
-### 🧭 Objective
+### Objective
 
 Deploy a multi-service app with X-Ray enabled. Inject delays and failures, then diagnose them via **service maps**, **traces**, and **log queries**.
 
 ---
 
-### ⏱️ Duration
 
-\~90 minutes
-
----
-
-## ✅ What Students Will Learn
+## What Students Will Learn
 
 * Enable distributed tracing with X-Ray
 * View trace maps and performance breakdown
@@ -20,7 +15,7 @@ Deploy a multi-service app with X-Ray enabled. Inject delays and failures, then 
 
 ---
 
-## 🧱 Step 0: Prerequisites
+## Step 0: Prerequisites
 
 1. Install EB CLI:
 
@@ -30,7 +25,7 @@ pip install awsebcli --upgrade
 
 ---
 
-## 💻 Step 1: Deploy Sample Flask App with X-Ray
+## Step 1: Deploy Sample Flask App with X-Ray
 
 ### 1.1 Create App Files
 
@@ -91,7 +86,7 @@ eb create xray-env --keyname sre-lab-key
 
 ---
 
-## 📡 Step 2: Generate Traffic
+## Step 2: Generate Traffic
 
 ```bash
 while true; do curl https://<your-env-url>/slow; sleep 1; done
@@ -101,7 +96,7 @@ Wait 5–10 minutes.
 
 ---
 
-## 🧭 Step 3: View Traces in X-Ray
+## Step 3: View Traces in X-Ray
 
 1. Go to **AWS X-Ray > Service Map**
 2. Look for `ElasticBeanstalk -> EC2`
@@ -120,7 +115,7 @@ Wait 5–10 minutes.
 
 ---
 
-## 📊 Step 4: Use CloudWatch Logs Insights
+## Step 4: Use CloudWatch Logs Insights
 
 ```sql
 fields @timestamp, @message
@@ -137,7 +132,7 @@ fields @timestamp, @message, @logStream
 
 ---
 
-## 🧪 Step 5: Remove Delay and Compare Traces
+## Step 5: Remove Delay and Compare Traces
 
 * Remove `time.sleep(2)` from `slow()`
 * Redeploy:
@@ -150,7 +145,7 @@ eb deploy
 
 ---
 
-## 🧹 Step 6: Cleanup
+## Step 6: Cleanup
 
 ```bash
 eb terminate xray-env
@@ -158,7 +153,7 @@ eb terminate xray-env
 
 ---
 
-## 💬 Reflection
+## Reflection
 
 * What causes cold starts in Lambda-based systems?
 * How would you detect a partial failure across microservices?

@@ -1,18 +1,12 @@
-# 🧪 Lab 5: Blue/Green Deployment with GitHub, CodePipeline, and CodeDeploy
+# Lab 4: Blue/Green Deployment with GitHub, CodePipeline, and CodeDeploy
 
-### 🧭 Objective
+### Objective
 
 Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS **CodePipeline + CodeDeploy** to perform **canary and blue/green rollouts** on EC2 Auto Scaling groups.
 
 ---
 
-### ⏱️ Duration
-
-\~90 minutes
-
----
-
-## ✅ Learning Outcomes
+## Learning Outcomes
 
 * Integrate GitHub with AWS CodePipeline
 * Set up a simple web app and deploy it to EC2
@@ -21,7 +15,7 @@ Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS
 
 ---
 
-## 🔧 AWS Services Used
+## AWS Services Used
 
 * GitHub (Source)
 * S3 (Artifact store)
@@ -33,9 +27,9 @@ Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS
 
 ---
 
-## 🧱 Step 0: Setup Prerequisites
+## Step 0: Setup Prerequisites
 
-### 🔐 0.1 IAM Roles to Create
+### 0.1 IAM Roles to Create
 
 #### a) CodePipeline Role
 
@@ -58,7 +52,7 @@ Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS
 
 ---
 
-## 🛠️ Step 1: Create Your GitHub Repository
+## Step 1: Create Your GitHub Repository
 
 ### 1.1 Create a new GitHub repo (e.g., `sre-bluegreen-app`)
 
@@ -135,7 +129,7 @@ git push origin main
 
 ---
 
-## ☁️ Step 2: Create Launch Template & Auto Scaling Group
+## Step 2: Create Launch Template & Auto Scaling Group
 
 ### 2.1 Launch Template
 
@@ -169,7 +163,7 @@ systemctl start codedeploy-agent
 
 ---
 
-## 🚀 Step 3: Create CodeDeploy App & Deployment Group
+## Step 3: Create CodeDeploy App & Deployment Group
 
 ### 3.1 Create CodeDeploy Application
 
@@ -188,7 +182,7 @@ systemctl start codedeploy-agent
 
 ---
 
-## 🧪 Step 4: Create CodePipeline with GitHub Source
+## Step 4: Create CodePipeline with GitHub Source
 
 ### 4.1 Create a New S3 Bucket for Artifacts
 
@@ -218,7 +212,7 @@ aws s3 mb s3://<your-unique-bucket-name> --region <same-region-as-pipeline>
 
 ---
 
-## 🧪 Step 5: Test the Deployment
+## Step 5: Test the Deployment
 
 1. Open your browser and visit the public DNS of an instance (or use the load balancer DNS).
 2. You should see:
@@ -229,7 +223,7 @@ aws s3 mb s3://<your-unique-bucket-name> --region <same-region-as-pipeline>
 
 ---
 
-## 🔁 Step 6: Simulate a New Version
+## Step 6: Simulate a New Version
 
 1. Change `app.py` to:
 
@@ -252,7 +246,7 @@ git push origin main
 
 ---
 
-## 🧹 Step 7: Cleanup
+## Step 7: Cleanup
 
 * Delete:
 
@@ -264,7 +258,7 @@ git push origin main
 
 ---
 
-## 💬 Reflection
+## Reflection
 
 * What if the canary fails? How can you roll back automatically?
 * How would you add a manual approval step before 90% rollout?

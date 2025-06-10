@@ -1,4 +1,4 @@
-# ⚙️ Lab 3: Monitoring a Distributed Application on AWS
+# Lab 3: Monitoring a Distributed Application on AWS
 
 **Objective:**
 Build and monitor a production-like **distributed system** using AWS-managed services. You will instrument the system with **CloudWatch**, **X-Ray**, and **SNS** to observe behavior and receive alerts in case of failures.
@@ -8,7 +8,7 @@ Build and monitor a production-like **distributed system** using AWS-managed ser
 
 ---
 
-## 🗂️ Architecture Overview
+## Architecture Overview
 
 ```text
 User Request
@@ -32,11 +32,11 @@ DynamoDB (Stores record)
 
 ---
 
-## 🧰 Step-by-Step Instructions
+## Step-by-Step Instructions
 
 ---
 
-### 🧱 1. Set Up Elastic Beanstalk (Frontend App)
+### 1. Set Up Elastic Beanstalk (Frontend App)
 
 #### 1.1 Create Beanstalk Environment
 
@@ -89,7 +89,7 @@ requests
 
 ---
 
-### ⚙️ 2. Set Up Backend API (API Gateway + Lambda + DynamoDB)
+### 2. Set Up Backend API (API Gateway + Lambda + DynamoDB)
 
 #### 2.1 Create DynamoDB Table
 
@@ -152,7 +152,7 @@ aws lambda create-function \
 
 ---
 
-### 🔄 3. Update Beanstalk Environment
+### 3. Update Beanstalk Environment
 
 1. Go back to **Elastic Beanstalk > Configuration > Software**.
 2. Set `BACKEND_API_URL` to your API Gateway base URL.
@@ -162,7 +162,7 @@ Now, Beanstalk forwards requests to API Gateway → Lambda → DynamoDB.
 
 ---
 
-### 🧪 4. Generate Traffic
+### 4. Generate Traffic
 
 From your terminal:
 
@@ -174,7 +174,7 @@ Let this run to build up metrics and traces.
 
 ---
 
-### 📊 5. Add Monitoring and Alerting
+### 5. Add Monitoring and Alerting
 
 #### 5.1 CloudWatch Metrics and Dashboards
 
@@ -200,7 +200,7 @@ Example: Alert on high API latency
 
 ---
 
-### 🔍 6. Explore Tracing with AWS X-Ray
+### 6. Explore Tracing with AWS X-Ray
 
 1. Open **CloudWatch > X-Ray traces**.
 2. View the **Trace Map**:
@@ -208,7 +208,7 @@ Example: Alert on high API latency
 
 ---
 
-### 🔥 7. Simulate Failure
+### 7. Simulate Failure
 
 1. Temporarily **disable the Lambda trigger** in API Gateway or break the code.
 2. Run traffic for 5 minutes.
@@ -219,7 +219,7 @@ Example: Alert on high API latency
 
 ---
 
-### 🧼 8. Cleanup Resources
+### 8. Cleanup Resources
 
 ```bash
 aws dynamodb delete-table --table-name UserRecords
@@ -232,7 +232,7 @@ aws lambda delete-function --function-name SaveUserRecord
 
 ---
 
-## 💬 Reflection & Challenge
+## Reflection & Challenge
 
 * How would you extend this architecture to include a **messaging layer** like SQS or EventBridge?
 * What kinds of **custom application metrics** could enhance observability?

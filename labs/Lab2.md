@@ -1,6 +1,4 @@
 
----
-
 ### Lab 2: Automating Toil with AWS Services
 
 **Objective:**  
