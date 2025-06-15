@@ -113,7 +113,7 @@ cat > test-plan.jmx <<EOF
       </ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP GET" enabled="true">
-          <stringProp name="HTTPSampler.domain">34.220.107.74</stringProp>
+          <stringProp name="HTTPSampler.domain">{your-app-public-ip}-</stringProp>
           <stringProp name="HTTPSampler.path">/</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
@@ -125,7 +125,7 @@ cat > test-plan.jmx <<EOF
 EOF
 ```
 
-> Replace `your-app-public-ip` with your app instance's IP.
+> Replace `{your-app-public-ip}` with your app instance's IP.
 
 ---
 

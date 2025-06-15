@@ -47,9 +47,9 @@ Create a system that monitors an EC2 instance for high CPU usage, triggers an al
 ### 1.1 Launch an EC2 Instance with SSM Access
 
 1. Go to **EC2 > Instances > Launch instance**
-2. Name: `Lab1-SSM-EC2`
+2. Name: `Lab5-SSM-EC2`
 3. AMI: `Amazon Linux 2` or `Amazon Linux 2023`
-4. Instance type: `t3.micro`
+4. Instance type: `t2.micro`
 5. Key pair: Create or choose one (for SSH fallback)
 6. **Network settings**:
    * Allow **SSH**
@@ -81,7 +81,7 @@ If not, verify:
 1. Go to **Systems Manager > Run Command**
 2. Click **Run a command**
 3. Command document: `AWS-RunShellScript`
-4. Target: `Lab1-SSM-EC2`
+4. Target: `Lab5-SSM-EC2`
 5. Command:
 
    ```bash
@@ -107,17 +107,19 @@ This command runs an infinite loop to stress the CPU.
 
 ### 5.1 Alarm Setup
 
-1. Go to **CloudWatch > Alarms > Create Alarm**
+1. Go to **CloudWatch > Alarms > All alarms > Create Alarm**
 2. Select Metric: `EC2 > Per-Instance Metrics > CPUUtilization`
 3. Conditions:
 
    * Threshold: `Greater than 80%`
-   * Period: `5 minutes`
-4. Actions:
+   * Period: `1 minute`
+4. Configure Actions:
 
-   * Create new **SNS topic**: `HighCPU-Alert`
+   * Select `Create new topic`
+   * Create new **SNS topic** named: `HighCPU-Alert`
    * Add your **email** as a subscriber (don’t forget to **confirm** it)
-5. Alarm Name: `HighCPUAlarm-Lab1`
+   * Click on `Create topic`
+5. Alarm Name: `HighCPUAlarm-Lab5`
 6. Click **Create Alarm**
 
 ---
@@ -182,7 +184,7 @@ mainSteps:
      "source": ["aws.cloudwatch"],
      "detail-type": ["CloudWatch Alarm State Change"],
      "detail": {
-       "alarmName": ["HighCPUAlarm-Lab1"],
+       "alarmName": ["HighCPUAlarm-Lab5"],
        "state": {
          "value": ["ALARM"]
        }
@@ -193,6 +195,7 @@ mainSteps:
 4. Target: **Systems Manager Automation**
 
    * Document: `RebootOnHighCPU`
+   * Leave the input path blank and just use the template
    * Input:
 
      ```json
@@ -203,6 +206,7 @@ mainSteps:
      ```
 
 5. Click **Create**
+6. Reboot the `Lab5-SSM-EC2` instance.
 
 ---
 

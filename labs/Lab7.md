@@ -23,7 +23,7 @@ Test system resilience by simulating an EC2 instance failure using AWS FIS, and 
 1. Go to **EC2 > Launch Instance**
 2. Name: `resilience-test-instance`
 3. AMI: Amazon Linux 2023 AMI
-4. Instance type: `t3.micro`
+4. Instance type: `t2.micro`
 5. Under Advanced Details> User data (basic web app):
 
 ```bash
@@ -36,7 +36,7 @@ echo "✅ Resilience Lab Homepage" > /var/www/html/index.html
 ```
 
 6. Enable Auto-assign public IP
-7. Create a new security group:
+7. Reuse the security group from Lab 1:
 
    * Allow HTTP (80) and SSH (22)
 8. Create a new key pair if needed
@@ -128,10 +128,10 @@ aws iam get-role --role-name FISExecutionRole
 ### 5. Create and Start FIS Experiment
 
 1. Go to **AWS FIS > Create experiment template**
-2. Target: EC2 instances in Auto Scaling group `ResilienceASG` by selecting `aws:ec2:instance` under Resource type
+2. Target: EC2 instances in Auto Scaling group `ResilienceASG` by selecting `aws:ec2:instance` under Resource type and selecting the ec2 instances as the targets.
 3. Action: Terminate instance
-4. IAM Role: `FISExecutionRole` 
-5. To enable logging, select `Send to CloudWatch Logs` 
+4. IAM Role: `FISExecutionRole`. Make sure to add log writing permissions to the IAM Role.
+5. To enable logging, select `Send to CloudWatch Logs`. 
 6. Create or select an existing log group
 7. Save and run
 
