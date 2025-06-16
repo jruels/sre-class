@@ -80,9 +80,10 @@ Learn to define Service Level Indicators (SLIs), set Service Level Objectives (S
    --instance-id <INSTANCE_ID> \
    --iam-instance-profile Name=EC2MonitoringRole
 
-**Run on EC2 Linux instance**
 
    ```
+**Run on EC2 Linux instance**
+
    - Install the CloudWatch Agent:
      ```bash
      sudo yum install -y amazon-cloudwatch-agent
