@@ -22,7 +22,6 @@ Learn to define Service Level Indicators (SLIs), set Service Level Objectives (S
      - Allow **SSH (port 22)** from `0.0.0.0/0`.
    - Launch the instance and note its public IP.
 
-**Run on EC2 Linux instance**
 
 2. **Set Up a Web Server**
    - Connect to the instance via SSH:
