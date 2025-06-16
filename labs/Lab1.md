@@ -43,6 +43,8 @@ Learn to define Service Level Indicators (SLIs), set Service Level Objectives (S
      ```
    - Verify by visiting `http://<public-ip>` in a browser.
 
+**Run in Visual Studio Code Bash terminal** 
+
 3. **Configure CloudWatch Monitoring**
    - Create an IAM Role
     ```bash
@@ -77,6 +79,9 @@ Learn to define Service Level Indicators (SLIs), set Service Level Objectives (S
    aws ec2 associate-iam-instance-profile \
    --instance-id <INSTANCE_ID> \
    --iam-instance-profile Name=EC2MonitoringRole
+
+**Run on EC2 Linux instance**
+
    ```
    - Install the CloudWatch Agent:
      ```bash
