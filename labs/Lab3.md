@@ -40,7 +40,7 @@ DynamoDB (Stores record)
 
 #### 1.1 Create Beanstalk Environment
 
-1. In Visual Studio Code, create a new file named `application.py` with the sample code below.
+1. In Visual Studio Code Bash terminal, create a new file named `application.py` with the sample code below.
 
 ```python
 # app.py
