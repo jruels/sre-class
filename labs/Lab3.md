@@ -40,11 +40,7 @@ DynamoDB (Stores record)
 
 #### 1.1 Create Beanstalk Environment
 
-1. In the AWS Console, go to **Elastic Beanstalk** → **Create Application**
-2. Name: `sre-distapp`
-3. Platform: **Python 3.13**
-4. Application Code: **Upload your code**
-5. Use this sample `application.py` file:
+1. In Visual Studio Code, create a new file named `application.py` with the sample code below.
 
 ```python
 # app.py
@@ -65,31 +61,44 @@ def index():
         return f"Error contacting backend: {e}", 500
 ```
 
-6. Create a `requirements.txt`:
+2. Create a `requirements.txt`:
 
 ```txt
 flask
 requests
 ```
 
-7. Zip the files and upload as source bundle.
-8. In **Configure service access**, create a service role and EC2 instance profile with the defaults
+3. Zip the files and upload as a source bundle.
 
-9. In **Configure updates, monitoring, and logging - optional**, set:
+4. In the AWS Console, go to **Elastic Beanstalk** → **Create Application**
+
+   * Name: `sre-distapp`
+
+   * Platform: **Python 3.13**
+
+   * Application Code: Select **Upload your code**
+
+7. In **Configure service access**, create a service role and EC2 instance profile with the defaults
+8. In **Configure updates, monitoring, and logging - optional**, set:
 
    * Add a new environment property `BACKEND_API_URL`: Leave it blank for now. We'll update this after deploying API Gateway.
-
-10. In **Monitoring**, enable:
+9. In **Platform -> Software**, enable:
 
    * **AWS X-Ray - X-Ray daemon** tracing
    * **CloudWatch Logs -> Log streaming**
 
-11. Deploy and note the application **CNAME URL**.
+11. Deploy and note the application **URL**.
 12. **NOTE:** If you get a `CREATE_FAILED` error, click on **Actions -> Rebuild environment** then try again.
 
 ---
 
 ### 2. Set Up Backend API (API Gateway + Lambda + DynamoDB)
+
+#### 2.0 Create IAM role
+
+1. In **IAM** -> **Roles** create an IAM role for the Lambda service with the following: 
+   1. Name: **EC2_DynamoDB_Access**
+   2. Policies: **AmazonDynamoDBFullAccess**, **AWSLambda_FullAccess**, **AWSXrayFullAccess**
 
 #### 2.1 Create DynamoDB Table
 
@@ -138,7 +147,7 @@ aws lambda create-function \
   --tracing-config Mode=Active
 ```
 
-> Replace `<LAMBDA_EXECUTION_ROLE_ARN>` with an IAM role that has access to Lambda, DynamoDB, and X-Ray. You can go to **IAM > Roles** to add a new role and copy the ARN.
+> Replace `<LAMBDA_EXECUTION_ROLE_ARN>` with an IAM role ARN that has access to Lambda, DynamoDB, and X-Ray with the IAM role you created. In **IAM**, choose the role you created, and at the top, copy the ARN. Example ARN: `arn:aws:iam::327632770096:role/EC2_DynamoDB_Access`
 
 #### 2.3 Create API Gateway
 
@@ -154,9 +163,10 @@ aws lambda create-function \
 
 ### 3. Update Beanstalk Environment
 
-1. Go back to **Elastic Beanstalk > Configuration > Software**.
-2. Set `BACKEND_API_URL` to your API Gateway base URL.
-3. Save and deploy.
+1. Go back to **Elastic Beanstalk > Environments > [YOUR_ENVIRONMENT] > Configuration **
+2. Under **Updates, monitoring, and logging**, scroll to the bottom of the page.
+3. Set `BACKEND_API_URL` to your API Gateway base URL.
+4. Save and deploy.
 
 Now, Beanstalk forwards requests to API Gateway → Lambda → DynamoDB.
 
@@ -164,7 +174,7 @@ Now, Beanstalk forwards requests to API Gateway → Lambda → DynamoDB.
 
 ### 4. Generate Traffic
 
-From your terminal:
+From your VS Code Bash terminal:
 
 ```bash
 while true; do curl http://<your-beanstalk-url>; sleep 1; done
@@ -210,7 +220,7 @@ Example: Alert on high API latency
 
 ### 7. Simulate Failure
 
-1. Temporarily **disable the Lambda trigger** in API Gateway or break the code.
+1. Delete the Lambda function.
 2. Run traffic for 5 minutes.
 3. Watch for:
 
