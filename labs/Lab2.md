@@ -21,28 +21,42 @@ Reduce operational toil by automating EC2 patching and snapshot cleanup using AW
 3. **Set Up Systems Manager for Patching**
    - Create an IAM role:
      - In IAM, create a role with `AmazonSSMManagedInstanceCore` policy.
+     - Add the policy `AmazonSSMAutomationRole`
      - Attach it to both instances via **EC2** > **Actions** > **Security** > **Modify IAM Role**.
    - Create an automation document:
      - Go to **Systems Manager** > **Documents** > **Create Document** > **Automation**.
-     - Use this JSON (replace INSTANCE_IDS with your instance ids environment variable):
+     - Use this JSON (create the parameter `INSTANCEIDS`, of type `StringList`, and replace `INSTANCEIDS` with your instance ids):
        ```json
         {
-        "schemaVersion": "0.3",
-        "description": "Patch EC2 instances",
-        "mainSteps": [
-            {
-            "action": "aws:runCommand",
-            "name": "InstallUpdates",
-            "inputs": {
-                "DocumentName": "AWS-RunPatchBaseline",
-                "InstanceIds": ["{{ INSTANCE_IDS }}"]
-            }
-            }
-        ]
-        }
+         "schemaVersion": "0.3",
+         "description": "Patch EC2 instances",
+         "parameters": {
+           "INSTANCEIDS": {
+             "type": "StringList"
+           }
+         },
+         "mainSteps": [
+           {
+             "name": "InstallUpdates",
+             "action": "aws:runCommand",
+             "isEnd": true,
+             "inputs": {
+               "DocumentName": "AWS-RunPatchBaseline",
+               "InstanceIds": [
+                 "{{ INSTANCEIDS }}"
+               ],
+               "Parameters": {
+                 "Operation": [
+                   "Install"
+                 ]
+               }
+             }
+           }
+         ]
+       }
        ```
      - Name it `PatchEC2Instances`.
-
+   
 4. **Automate Snapshot Cleanup with Lambda**
    - Create a Lambda function:
      - In Lambda, click **Create Function**.
@@ -52,7 +66,7 @@ Reduce operational toil by automating EC2 patching and snapshot cleanup using AW
        ```python
        import boto3
        from datetime import datetime, timedelta
-
+       
        def lambda_handler(event, context):
            ec2 = boto3.client('ec2')
            snapshots = ec2.describe_snapshots(OwnerIds=['self'])['Snapshots']
@@ -67,8 +81,12 @@ Reduce operational toil by automating EC2 patching and snapshot cleanup using AW
 5. **Test Automation**
    - Run `PatchEC2Instances` on one instance via Systems Manager.
    - Manually trigger the Lambda function and verify snapshot deletion.
-
+     - Go to the Lambda service, and select functions.
+     - Select the Test panel
+     - In the JSON area remove the sample, and replace it with `{}`
+   
 6. **Cleanup**
+   
    - Terminate EC2 instances.
    - Delete snapshots, Lambda function, and EventBridge rule.
 

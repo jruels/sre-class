@@ -93,7 +93,7 @@ requests
 
 #### 2.1 Create DynamoDB Table
 
-Open a Linux terminal window (install Linux on WLS if using Windows) and run the following command:
+In VS Code, open a Bash terminal window and run the following command:
 ```bash
 aws dynamodb create-table \
   --table-name UserRecords \
