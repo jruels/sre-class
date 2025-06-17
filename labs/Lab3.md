@@ -68,16 +68,12 @@ flask
 requests
 ```
 
-3. Zip the files and upload as a source bundle.
-
+3. Zip the files.
 4. In the AWS Console, go to **Elastic Beanstalk** → **Create Application**
 
    * Name: `sre-distapp`
-
    * Platform: **Python 3.13**
-
-   * Application Code: Select **Upload your code**
-
+   * Application Code: Select **Upload your code** and choose the zip file from step 3.
 7. In **Configure service access**, create a service role and EC2 instance profile with the defaults
 8. In **Configure updates, monitoring, and logging - optional**, set:
 
@@ -86,7 +82,6 @@ requests
 
    * **AWS X-Ray - X-Ray daemon** tracing
    * **CloudWatch Logs -> Log streaming**
-
 11. Deploy and note the application **URL**.
 12. **NOTE:** If you get a `CREATE_FAILED` error, click on **Actions -> Rebuild environment** then try again.
 
