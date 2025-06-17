@@ -25,7 +25,7 @@ Reduce operational toil by automating EC2 patching and snapshot cleanup using AW
      - Attach it to both instances via **EC2** > **Actions** > **Security** > **Modify IAM Role**.
    - Create an automation document:
      - Go to **Systems Manager** > **Documents** > **Create Document** > **Automation**.
-     - Use this JSON (create the parameter `INSTANCEIDS`, of type `StringList`, and replace `INSTANCEIDS` with your instance ids):
+     - Use this JSON (create the parameter `INSTANCEIDS`, of type `StringList`):
        ```json
         {
          "schemaVersion": "0.3",
