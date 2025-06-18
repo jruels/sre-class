@@ -29,14 +29,24 @@ Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS
 
 ## Step 0: Setup Prerequisites
 
+### 0.0 Create a GitHub account
+
+* If required, create a [GitHub account](http://github.com/signup)
+
+* After creating a GitHub account, [create a new repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories) named `sre-bluegreen-app`
+
 ### 0.1 IAM Roles to Create
 
 #### a) CodePipeline Role
 
 * **IAM > Roles > Create Role**
-* Service or use case: `CodePipeline`
+* Service or use case: `Codedeploy`
 * Permissions: `AWSCodePipelineFullAccess`, `AmazonS3FullAccess`
 * Name: `CodePipelineServiceRole`
+* Select the role from the list 
+* Navigate to the trust policy tab
+  * Edit and replace `codedeploy` with `codepipeline`
+
 
 #### b) CodeDeploy Role
 
@@ -52,16 +62,22 @@ Implement a **zero-downtime deployment** using **GitHub as the source**, and AWS
 
 ---
 
-## Step 1: Create Your GitHub Repository
+## Step 1: Clone your new repository
 
-### 1.1 Create a new GitHub repo (e.g., `sre-bluegreen-app`)
+**Run the following commands in Visual Studio Code's Bash terminal.**
 
-### 1.2 Clone and add files
+### 1.1 Clone your new GitHub repo (e.g., `sre-bluegreen-app`)
+
+**NOTE**: Replace `<your-username>` with your GitHub username
 
 ```bash
 git clone https://github.com/<your-username>/sre-bluegreen-app.git
 cd sre-bluegreen-app
 ```
+
+### 1.2 Add files
+
+In Visual Studio Code, create the following folders and files.
 
 #### a) `app.py`
 
@@ -121,11 +137,22 @@ chmod +x scripts/*.sh
 
 Push changes:
 
+In VS Code Bash terminal, run: 
+
 ```bash
 git add .
 git commit -m "Initial commit for Blue/Green lab"
 git push origin main
 ```
+
+If you receive an error, run the following commands, providing your info: 
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+Attempt the `git commit` and `git push` commands again.
 
 ---
 
@@ -135,7 +162,7 @@ git push origin main
 
 1. **EC2 > Launch Templates > Create**
 2. Name: `BlueGreenTemplate`
-3. AMI: Amazon Linux 2 (x86\_64)
+3. AMI: Amazon Linux 2 AMI (HVM)
 4. Instance type: `t3.micro`
 5. IAM instance profile: `EC2CodeDeployRole`
 6. User data:
@@ -158,8 +185,10 @@ systemctl start codedeploy-agent
 * Go to **EC2 > Auto Scaling Groups**
 * Create ASG using `BlueGreenTemplate`
 * VPC: default
-* Subnet: public subnets
+* Subnet: public subnets (select one)
+* Step 3: Leave default (click next)
 * Size: 1 desired, 1 min, 2 max
+* Click on skip to review and create the Auto Scaling Group
 
 ---
 
@@ -171,7 +200,14 @@ systemctl start codedeploy-agent
 * Name: `BlueGreenApp`
 * Platform: EC2/On-premises
 
-### 3.2 Create Deployment Group
+### 3.2 Create Target Group
+
+* **EC2 > Target Groups**
+* Create new target group
+  * Name: ASGtarget
+  * Leave the rest default and create the group.
+
+### 3.3 Create Deployment Group
 
 * Name: `BlueGreenDG`
 * Service role: `CodeDeployServiceRole`
@@ -186,6 +222,10 @@ systemctl start codedeploy-agent
 
 ### 4.1 Create a New S3 Bucket for Artifacts
 
+Run the command below in Visual Studio Code Bash terminal, or AWS CloudShell.
+
+NOTE: replace `<your-unique-bucket-name>` with an actual unique string (DNS compliant)
+
 ```bash
 aws s3 mb s3://<your-unique-bucket-name> --region <same-region-as-pipeline>
 ```
@@ -196,11 +236,15 @@ aws s3 mb s3://<your-unique-bucket-name> --region <same-region-as-pipeline>
 * Select `Build custom pipeline`
 * Name: `BlueGreenPipeline`
 * Service role > Existing service role: `CodePipelineServiceRole`
-* Artifact store > custom location: `s3://<your-bucket>`
+* Expand the Additional Settings
+* Artifact store > choose custom location and specify your newly created S3 bucket: `s3://<your-bucket>`
 
 #### Source Stage:
 
-* Provider: **GitHub (Version 2)**
+* Provider: **GitHub (via OAuth)**
+* Click Connect to GitHub
+  * In the pop-up window, authorize AWS Code Pipeline to access your GitHub account. 
+
 * Connect to GitHub → `sre-bluegreen-app` repo
 * Branch: `main`
 
@@ -225,6 +269,8 @@ aws s3 mb s3://<your-unique-bucket-name> --region <same-region-as-pipeline>
 
 ## Step 6: Simulate a New Version
 
+Run the following in VS Code:
+
 1. Change `app.py` to:
 
 ```python
@@ -241,7 +287,7 @@ git push origin main
 3. Watch:
 
    * CodePipeline runs
-   * CodeDeploy executes canary deployment (10%)
+   * CodeDeploy executes a canary deployment (10%)
    * After 5 minutes → shifts to remaining 90%
 
 ---
